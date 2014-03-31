@@ -2,6 +2,11 @@ package funksjonTesting;
 
 import javax.swing.*;
 
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
 import java.awt.event.*;
 
 @SuppressWarnings("serial")
@@ -29,6 +34,7 @@ super("Analyseverktøy logg inn");
 setSize(800,600);
 setLocation(500,280);
 panel.setLayout (null);
+setResizable(false);
 
 //Setter dimensjoner og plassering til labels, buttons, og textfields
 txuser.setBounds(320,220,150,20);
@@ -72,17 +78,15 @@ uregistrert.addActionListener(new ActionListener() {
     }});
 }
 
-
 public void actionlogin(){
 blogin.addActionListener(new ActionListener()
-
 {
 //Actionevent, henter string fra brukernavn og passord, hvis det samstemmer med gitte paramenter skal startsiden vises. 
 public void actionPerformed(ActionEvent ae) {
 String bnavn = txuser.getText();
 @SuppressWarnings("deprecation")
 String pord = pass.getText();
-if(bnavn.equals("Elg") && pord.equals("Elg")) {
+if(bnavn.equals("Elg") && pord.equals("Elg")){
 Mats regFace =new Mats();
 regFace.setVisible(true);
 dispose();
@@ -94,6 +98,25 @@ Mats regFace =new Mats();
 regFace.setVisible(true);
 dispose();
 } 
+//Legger til mulighet for at systemet godtar flere brukernavn.
+if(bnavn.equals("Test") && pord.equals("Test")) {
+Mats regFace =new Mats();
+regFace.setVisible(true);
+dispose();
+} 
+//Legger til mulighet for at systemet godtar flere brukernavn.
+if(bnavn.equals("Klikk") && pord.equals("Klikk")) {
+Mats regFace =new Mats();
+regFace.setVisible(true);
+dispose();
+} 
+//Legger til mulighet for at systemet godtar flere brukernavn.
+if(bnavn.equals("eli") && pord.equals("eli")) {
+Mats regFace =new Mats();
+regFace.setVisible(true);
+dispose();
+} 
+ 
 else {
 
 //hvis brukernavn/passord er feil, printer ut feil-melding og resetter feltene

@@ -9,29 +9,45 @@ import java.io.IOException;
 import java.io.File;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.lang.*;
 import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class Mats extends JFrame implements ActionListener {
-
-    private JButton btnLogin, btnPath, btnSave, btnSaveTann;
+	
+	private JRadioButton Ufullstendig;
+    private JButton btnLogin, btnPath, btnSave, btnSaveTann, btnSaveDB;
     private JMenuItem arkiv1, excelInn, excelUt, publisering, grafer, multivariat, bivariat, univariat, settElg, tannanalyse, værdata, skogsanalyse, beiteregistrering;
     private JPanel masterPanel, loginBtn, mainContent,  masterCenter, importExcelContent, publiseringPanel, registrerTann;
     private JMenu hjemMenu;
     private JMenuBar menuBar;
     @SuppressWarnings("rawtypes")
 	private JComboBox valgImport;
-    private JTextField filePath, txtFeltid, txtValdnr, txtValdnavn, txtJaktfeltnr, txtJaktfeltnavn, txtJaktleder, txtDato, txtAlder, txtVeidVekt, txtKjønn, txtFeltDyr, txtAntallKalv, txtAntallTagger, txtAntattVekt;
+    private JTextField filePath, txtFeltid, txtValdnr, txtValdnavn, RadioButton, txtJaktfeltnr, txtJaktfeltnavn, txtJaktleder, txtDato, txtAlder, txtVeidVekt, txtKjønn, txtFeltDyr, txtAntallKalv, txtAntallTagger, txtAntattVekt;
     private JTextArea textArea1, textArea2, textArea3, textArea4, textArea5;
+    private String      feltId;
+    private String		ValdNr;
+    private String      ValdNavn;
+    private String      Jaktleder;
+    private String      Dato;
+    private String		Alder;
+    private String      Kjønn;
+    private String      FeltDyr;
+    private String      AntallTagger;
+    private String      AntattVekt;
+	private java.lang.String JaktFeltNr;
+	private java.lang.String VeidVekt;
+	private java.lang.String AntallKalv;
+
         
     @SuppressWarnings({ "unchecked", "rawtypes" })
 	public Mats() {
-        
-            
+          
         setTitle("Analyseverktøy");
         setSize(800, 600);
-            
+        setLocation(500, 200);
+        setResizable(false);
+        
         //Lager menybar for JFrame
         menuBar = new JMenuBar();
         //Adder menybaren til Framen
@@ -135,6 +151,7 @@ public class Mats extends JFrame implements ActionListener {
         textArea5.setText("Du har valgt Beiteregistrering");
         btnPath = new JButton("Velg fil");
         btnSave = new JButton("Importer");
+        
         //Tar indexen fra arrayen, setter riktig textfield til riktig array. 
         //Mye kode kan dette gjøres annerledes? 
         valgImport.addActionListener(
@@ -178,7 +195,6 @@ public class Mats extends JFrame implements ActionListener {
                        );
         valgImport.addActionListener(this);
         valgImport.setVisible(true);
-        
         textArea2.setVisible(false);
         textArea3.setVisible(false);
         textArea4.setVisible(false);
@@ -221,6 +237,17 @@ public class Mats extends JFrame implements ActionListener {
         c.gridy = 2;
         importExcelContent.add(btnSave, c);
         
+        JRadioButton bool = new JRadioButton("fullstendig?", true);
+        bool.setActionCommand("false");
+     
+        JButton btnSaveDB = new JButton("Exporter Til DB");
+        btnSaveDB.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                saveData();
+            }
+        });
+        
+        
         //Panel for registrere tannanalyse
         registrerTann = new JPanel(new GridBagLayout());
         JLabel feltid = new JLabel("Felt Id");
@@ -251,7 +278,20 @@ public class Mats extends JFrame implements ActionListener {
         txtAntallKalv = new JTextField(15);
         txtAntallTagger = new JTextField(15);
         txtAntattVekt = new JTextField(15);
-        btnSaveTann = new JButton("Lagre");
+        RadioButton = new JTextField(15);
+        
+        Ufullstendig = new JRadioButton("Ufullstendig?");
+        
+      
+        Ufullstendig.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        	RadioButton.setText(((JRadioButton) e.getSource()).getText());
+        	}
+        	});
+        
+        
+        
+        btnSaveTann = new JButton("Exporter Til Excel");
         c.gridx = 0;
         c.gridy = 0;
         registrerTann.add(feltid, c);
@@ -294,7 +334,6 @@ public class Mats extends JFrame implements ActionListener {
         c.gridx = 4;
         c.gridy = 6;
         registrerTann.add(antattVekt, c);
-        
         c.gridx = 0;
         c.gridy = 1;
         registrerTann.add(txtFeltid, c);
@@ -340,6 +379,13 @@ public class Mats extends JFrame implements ActionListener {
         c.gridx = 4;
         c.gridy = 9;
         registrerTann.add(btnSaveTann, c);
+        c.gridx = 6;
+        c.gridy = 7;
+        registrerTann.add(bool, c);
+        c.gridy = 9;
+        c.gridx = 6;
+        registrerTann.add(btnSaveDB, c);
+       
         
         //Lager et masterPanel som er en kombi av andre paneler
         masterPanel = new JPanel(new GridBagLayout());
@@ -349,9 +395,7 @@ public class Mats extends JFrame implements ActionListener {
         masterPanel.add(masterCenter);
         masterPanel.add(publiseringPanel);
        
-        
         add(masterPanel, BorderLayout.CENTER);
-     
         
         //Lyttere
         btnPath.addActionListener(this);
@@ -388,6 +432,7 @@ public class Mats extends JFrame implements ActionListener {
         Mats me = new Mats();
         me.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         me.setVisible(true);
+        
     }
 
     @Override
@@ -451,15 +496,8 @@ public class Mats extends JFrame implements ActionListener {
                 importExcelContent.setVisible(false);
 
             }
-            if (e.getSource() == arkiv1){
-            	menuBar.setVisible(true);
-            	importExcelContent.setVisible(false);
-                mainContent.setVisible(false);
-                registrerTann.setVisible(false);
-                publiseringPanel.setVisible(false);
-
-
-            }
+            
+            
             if (e.getSource() == excelUt) { 
                 
             	 masterCenter.setVisible(false);
@@ -491,14 +529,40 @@ public class Mats extends JFrame implements ActionListener {
             importExcelContent.setVisible(false);
             registrerTann.setVisible(true);
             publiseringPanel.setVisible(false);
-
+            }
+           
+    }   	//Metode for å hente data fra textfields.
+            protected void saveData(){
+                String feltId = this.txtFeltid.getText();
+                String ValdNr = this.txtValdnr.getText();
+                String ValdNavn = this.txtValdnavn.getText();
+                String JaktFeltNr = this.txtJaktfeltnr.getText();
+                String Jaktleder = this.txtJaktleder.getText();
+                String Dato = this.txtDato.getText();
+                String VeidVekt = this.txtVeidVekt.getText();
+                String Kjønn = this.txtKjønn.getText();
+                String AntallKalv = this.txtAntallKalv.getText();
+                String FeltDyr = this.txtFeltDyr.getText();
+                String AntallTagger = this.txtAntallTagger.getText();
+                String AntattVekt = this.txtAntattVekt.getText();
+                String Alder = this.txtAlder.getText();
+                String RadioButton = this.RadioButton.getText();
+               
+           
+                // Dataene valideres før de sendes til DB.    
+                User user = new User(feltId, ValdNr, ValdNavn, Alder, JaktFeltNr, Jaktleder, Dato, VeidVekt, Kjønn, FeltDyr, AntattVekt, AntallKalv, AntallTagger, RadioButton); 
+                boolean result = user.doUpdate(true, true);
+                if(result){
+                    JOptionPane.showMessageDialog(this,"Dataen er Lagt i Databasen.");
+                }else{
+                    JOptionPane.showMessageDialog(this,"Databasen Feilet.");
+                }
     
-    } 
-    } 
-    
-   
-        
     }
+}
+
+        
+
     
 
 
