@@ -10,22 +10,24 @@ import java.io.File;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.*;
+
 import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class Mats extends JFrame implements ActionListener {
 	
 	private JRadioButton Ufullstendig;
-    private JButton btnLogin, btnPath, btnSave, btnSaveTann, btnSaveDB;
-    private JMenuItem arkiv1, excelInn, excelUt, publisering, grafer, multivariat, bivariat, univariat, settElg, tannanalyse, værdata, skogsanalyse, beiteregistrering;
-    private JPanel masterPanel, loginBtn, mainContent,  masterCenter, importExcelContent, publiseringPanel, registrerTann;
-    private JMenu hjemMenu;
-    private JMenuBar menuBar;
+    public JButton btnLogin, btnPath, btnSave, btnSaveTann, btnSaveDB, btnSaveDBB;
+    public JMenuItem arkiv1, excelInn, excelUt, publisering, grafer, multivariat, bivariat, univariat, settElg, tannanalyse, værdata, skogsanalyse, beiteregistrering;
+    public JPanel masterPanel, loginBtn, mainContent,  masterCenter, importExcelContent, publiseringPanel, registrerTann, BeiteContent;
+    public JMenu hjemMenu;
+    public JMenuBar menuBar;
     @SuppressWarnings("rawtypes")
 	private JComboBox valgImport;
     private JTextField filePath, txtFeltid, txtValdnr, txtValdnavn, RadioButton, txtJaktfeltnr, txtJaktfeltnavn, txtJaktleder, txtDato, txtAlder, txtVeidVekt, txtKjønn, txtFeltDyr, txtAntallKalv, txtAntallTagger, txtAntattVekt;
+    private JTextField txtros, txteiner, txteik, txtbjørk, txtfuru;
     private JTextArea textArea1, textArea2, textArea3, textArea4, textArea5;
-    private String      feltId;
+    private String      feltId, furu, bjørk, einer, eik, ros;
     private String		ValdNr;
     private String      ValdNavn;
     private String      Jaktleder;
@@ -38,6 +40,7 @@ public class Mats extends JFrame implements ActionListener {
 	private java.lang.String JaktFeltNr;
 	private java.lang.String VeidVekt;
 	private java.lang.String AntallKalv;
+
 
         
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -52,7 +55,7 @@ public class Mats extends JFrame implements ActionListener {
         menuBar = new JMenuBar();
         //Adder menybaren til Framen
         setJMenuBar(menuBar);
-         hjemMenu = new JMenu("Hjem");
+        hjemMenu = new JMenu("Hjem");
         
         //lager dropdown menyer
         JMenu importMenu = new JMenu("Import");
@@ -152,6 +155,55 @@ public class Mats extends JFrame implements ActionListener {
         btnPath = new JButton("Velg fil");
         btnSave = new JButton("Importer");
         
+        BeiteContent = new JPanel(new GridBagLayout());
+        BeiteContent.setSize(800, 600);
+        txtfuru = new JTextField(15);
+        txtbjørk = new JTextField(15);
+        txteik = new JTextField(15);
+        txtros = new JTextField(15);
+        txteiner = new JTextField(15);
+        JButton btnSaveDBB = new JButton("Exporter Til DB");
+        JLabel bjørk = new JLabel("Bjørk");
+        JLabel furu = new JLabel("Furu");
+        JLabel eik = new JLabel("Eik");
+        JLabel ros = new JLabel("Ros");
+        JLabel einer = new JLabel("Einer");
+        c.gridx = 0;
+        c.gridy = 1;
+        BeiteContent.add(txtfuru, c);
+        c.gridx = 0;
+        c.gridy = 0; 
+        BeiteContent.add(furu, c);
+        c.gridx = 0;
+        c.gridy = 3;
+        BeiteContent.add(txtbjørk, c);
+        c.gridx = 0;
+        c.gridy = 2;
+        BeiteContent.add(bjørk, c);
+        c.gridx = 0;
+        c.gridy = 5;
+        BeiteContent.add(txteik, c);
+        c.gridx = 0;
+        c.gridy = 4;
+        BeiteContent.add(eik, c);
+        c.gridx = 0;
+        c.gridy = 7;
+        BeiteContent.add(txteiner, c);
+        c.gridx = 0;
+        c.gridy = 6;
+        BeiteContent.add(ros, c);
+        c.gridx = 0;
+        c.gridy = 9;
+        BeiteContent.add(txtros, c);
+        c.gridx = 0;
+        c.gridy = 8;
+        BeiteContent.add(einer, c);
+        c.gridx = 0;
+        c.gridy = 10;
+        BeiteContent.add(btnSaveDBB, c);
+
+
+       
         //Tar indexen fra arrayen, setter riktig textfield til riktig array. 
         //Mye kode kan dette gjøres annerledes? 
         valgImport.addActionListener(
@@ -246,6 +298,14 @@ public class Mats extends JFrame implements ActionListener {
                 saveData();
             }
         });
+        
+        
+        btnSaveDBB.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                saveDataB();
+            }
+        });
+	
         
         
         //Panel for registrere tannanalyse
@@ -394,6 +454,7 @@ public class Mats extends JFrame implements ActionListener {
         masterPanel.add(mainContent);
         masterPanel.add(masterCenter);
         masterPanel.add(publiseringPanel);
+        masterPanel.add(BeiteContent);
        
         add(masterPanel, BorderLayout.CENTER);
         
@@ -424,6 +485,7 @@ public class Mats extends JFrame implements ActionListener {
         menuBar.setVisible(true);
         mainContent.setVisible(true);
         publiseringPanel.setVisible(false);
+        BeiteContent.setVisible(false);
     
     }
     
@@ -497,6 +559,15 @@ public class Mats extends JFrame implements ActionListener {
 
             }
             
+            if(e.getSource() == beiteregistrering){
+        		BeiteRegistrering regFace =new BeiteRegistrering();
+        		regFace.setVisible(true);
+        		dispose();
+        		
+        		
+            }
+            	
+            
             
             if (e.getSource() == excelUt) { 
                 
@@ -529,6 +600,7 @@ public class Mats extends JFrame implements ActionListener {
             importExcelContent.setVisible(false);
             registrerTann.setVisible(true);
             publiseringPanel.setVisible(false);
+            BeiteContent.setVisible(false);
             }
            
     }   	//Metode for å hente data fra textfields.
@@ -557,9 +629,29 @@ public class Mats extends JFrame implements ActionListener {
                 }else{
                     JOptionPane.showMessageDialog(this,"Databasen Feilet.");
                 }
-    
+            }
+                protected void saveDataB(){
+                    String furu = this.txtfuru.getText();
+                    String bjørk = this.txtbjørk.getText();
+                    String einer = this.txteiner.getText();
+                    String ros = this.txtros.getText();
+                    String eik = this.txteik.getText();
+
+
+                    
+               
+                    // Dataene valideres før de sendes til DB.    
+                    BeiteRegistrering beiteregistrering = new BeiteRegistrering(furu, bjørk, einer, eik, ros); 
+                    boolean result = beiteregistrering.doUpdate(true, true);
+                    if(result){
+                        JOptionPane.showMessageDialog(this,"Dataen er Lagt i Databasen.");
+                    }else{
+                        JOptionPane.showMessageDialog(this,"Databasen Feilet.");
+                    }
+
+        }
     }
-}
+
 
         
 

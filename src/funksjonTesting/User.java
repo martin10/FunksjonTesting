@@ -42,7 +42,7 @@ public class User{
           
     }
    
-
+ 
 	public boolean doUpdate(boolean commit, boolean close){     
         try {           
             DBM dbm = new DBM();
@@ -77,10 +77,15 @@ public class User{
             preState.setString(14, RadioButton);
          
             resultSet  = preState.executeQuery();
+           
             while (resultSet.next()) {
             
                 o = new User(resultSet.getString(1),resultSet.getString(2),resultSet.getString(3),resultSet.getString(4),resultSet.getString(5),resultSet.getString(6),resultSet.getString(7),
                 		resultSet.getString(8),resultSet.getString(9),resultSet.getString(10),resultSet.getString(11),resultSet.getString(12),resultSet.getString(13), resultSet.getString(14));
+           
+          
+           
+
             }
         }catch (Exception e) {
             e.printStackTrace();
@@ -90,8 +95,10 @@ public class User{
             if( close && dbm.connection != null )
                 dbm.connection.close();         
         }
+        
         return o;
     }
+    
 
     public static boolean clientUpdate(DBM dbm, User o, boolean close, boolean commit) throws Exception{        
         boolean returnValue = true;
@@ -141,7 +148,6 @@ public class User{
                 preState.setString(12, o.getAntattVekt());
                 preState.setString(14, o.getRadioButton());
 
-                
             }
         }catch (Exception e) {
             returnValue = false; 
