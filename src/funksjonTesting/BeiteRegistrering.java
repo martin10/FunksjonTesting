@@ -65,6 +65,7 @@ public class BeiteRegistrering extends Mats {
 		BeiteContent.setVisible(true);
     	mainContent.setVisible(false);
     	Panel1.setVisible(false);
+    	VarDataContent.setVisible(false);
 		}
 
 
